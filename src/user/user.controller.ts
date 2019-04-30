@@ -1,10 +1,10 @@
 import { Controller, Get, Post, Body, UseFilters } from '@nestjs/common';
 import { UsersService } from './user.service';
-import { CreateUserDTO } from './dto/create-user.dto';
-import { User } from './interfaces/user.interface';
 import { HttpExceptionFilter } from '../shared/filters/http-exception.filter';
-import { async } from 'rxjs/internal/scheduler/async';
-import { LoginUserDTO } from './dto/login-user.dto';
+import { UserVm } from './models/user.model';
+import { LoginResultVm } from './models/login-result.model';
+import { LoginVm } from './models/login.model';
+import { RegisterVm } from './models/register.model';
 
 @Controller('user')
 @UseFilters(HttpExceptionFilter)
@@ -12,17 +12,20 @@ export class UsersController {
   constructor(private readonly userService: UsersService) {}
 
   @Get()
-  async getList(): Promise<User[]> {
-    return await this.userService.findAll();
+  async getList(): Promise<UserVm[]> {
+    const user = await this.userService.findAll({
+      lean: true,
+    });
+    return user.map(user => new UserVm(user));
   }
 
-  @Post('/register')
-  async register(@Body() createUserDto: CreateUserDTO): Promise<User[]> {
-    return await this.userService.register(createUserDto);
+  @Post('login')
+  async login(@Body() params: LoginVm): Promise<LoginResultVm> {
+    return this.userService.login(params);
   }
 
-  @Post('/login')
-  async login(@Body() loginUser: LoginUserDTO): Promise<any> {
-    return await this.userService.login(loginUser);
+  @Post('register')
+  async register(@Body() params: RegisterVm): Promise<LoginResultVm> {
+    return this.userService.register(params);
   }
 }

@@ -1,15 +1,40 @@
-import * as mongoose from 'mongoose';
+import { Schema } from 'mongoose';
+import { BaseModel, BaseVm } from '../../shared/base.model';
 
-export const UserModel = new mongoose.Schema({
-  username: {
+export const UserSchema = new Schema({
+  username: String,
+  email: {
     type: String,
-    index: true,
     unique: true,
   },
   password: String,
   group: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: Schema.Types.ObjectId,
     ref: 'Group',
   },
   age: Number,
 });
+
+export interface User extends BaseModel {
+  username: string;
+  email: string;
+  password: string;
+  group: string;
+  age: number;
+}
+
+export class UserVm extends BaseVm<User> {
+  username: string;
+  group: string;
+  email: string;
+  age: number;
+  constructor(model: User = null) {
+    super(model);
+  }
+  getViewModel(model: User) {
+    this.username = model.username;
+    this.group = model.group;
+    this.age = model.age;
+    this.email = model.email;
+  }
+}
