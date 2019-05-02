@@ -1,35 +1,23 @@
-import { Model } from 'mongoose';
-import { BaseModel } from './base.model';
+import { Document, Model } from 'mongoose';
 
-export abstract class BaseService<T extends BaseModel> {
-  constructor(protected model: Model<T>) {}
-
-  async findAll(options: any = {}): Promise<T[]> {
-    const { where, limit, skip, sort, lean = false } = options;
-    return this.model
-      .find(where)
-      .skip(skip)
-      .limit(limit)
-      .sort(sort)
-      .lean(lean);
+export abstract class BaseService<T extends Document> {
+  protected _model: Model<T>;
+  async findAll(filter = {}): Promise<T[]> {
+    return this._model.find(filter);
   }
-
-  async findOne(options: any = {}): Promise<T> {
-    const { where, lean = false } = options;
-    return this.model.findOne(where).lean(lean);
+  async findOne(filter = {}): Promise<T> {
+    return this._model.findOne(filter);
   }
-
-  async findById(...options): Promise<T> {
-    const [id, { lean = false }] = options;
-    return this.model.findById(id).lean(lean);
+  async findById(id): Promise<T> {
+    return this._model.findById(id);
   }
-
-  async findOneAndUpdate(options: any = {}): Promise<T> {
-    const { where, update, isNew } = options;
-    return this.model.findOneAndUpdate(where, update, { new: isNew });
-  }
-
   async create(data): Promise<T> {
-    return this.model.create(data);
+    return this._model.create(data);
+  }
+  async findOneAndUpdate(filter = {}, update = {}): Promise<T> {
+    return this._model.findOneAndUpdate(filter, update);
+  }
+  async deleteOne(filter = {}): Promise<void> {
+    this._model.deleteOne(filter);
   }
 }

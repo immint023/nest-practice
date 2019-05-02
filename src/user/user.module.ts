@@ -1,20 +1,13 @@
 import { Module } from '@nestjs/common';
-import { UsersController } from './user.controller';
-import { UsersService } from './user.service';
+import { UserController } from './user.controller';
+import { UserService } from './user.service';
 import { MongooseModule } from '@nestjs/mongoose';
-import { UserSchema } from './models/user.model';
-import { APP_FILTER } from '@nestjs/core';
-import { HttpExceptionFilter } from '../shared/filters/http-exception.filter';
+import { userSchema } from './models/user.model';
+import { EmailModule } from 'src/shared/email/email.module';
 
 @Module({
-  imports: [MongooseModule.forFeature([{ name: 'User', schema: UserSchema }])],
-  controllers: [UsersController],
-  providers: [
-    UsersService,
-    {
-      provide: APP_FILTER,
-      useClass: HttpExceptionFilter,
-    },
-  ],
+  imports: [MongooseModule.forFeature([{ name: 'User', schema: userSchema }])],
+  controllers: [UserController],
+  providers: [UserService],
 })
 export class UserModule {}
