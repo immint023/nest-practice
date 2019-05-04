@@ -5,12 +5,16 @@ export const userSchema = new Schema({
   username: String,
   email: String,
   password: String,
+  codeResetPassword: String,
+  expiredAt: Date,
 });
 
 export interface User extends BaseModel {
   username: string;
   email: string;
   password: string;
+  codeResetPassword: string;
+  expiredAt: Date;
 }
 
 export class UserVm extends BaseVm<User> {

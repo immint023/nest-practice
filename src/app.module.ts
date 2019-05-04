@@ -13,6 +13,7 @@ import { UserModule } from './user/user.module';
     UserModule,
     MongooseModule.forRoot(ConfigurationService.connectionString, {
       useNewUrlParser: true,
+      useFindAndModify: false,
     }),
   ],
   controllers: [AppController],
