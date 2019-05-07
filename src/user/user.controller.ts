@@ -5,6 +5,8 @@ import {
   Body,
   BadRequestException,
   HttpStatus,
+  UseGuards,
+  Req,
 } from '@nestjs/common';
 import * as shortid from 'shortid';
 import { UserService } from './user.service';
@@ -13,13 +15,20 @@ import { LoginResultVm } from './models/login-result.model';
 import { RegisterVm } from './models/register.model';
 import { LoginVm } from './models/login.model';
 import { ResetPasswordVm } from './models/reset-password.model';
+import { AuthGuard } from '@nestjs/passport';
+import { AuthService } from 'src/shared/auth/auth.service';
 
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+    private readonly authService: AuthService,
+  ) {}
 
   @Get()
-  async findAll(): Promise<UserVm[]> {
+  @UseGuards(AuthGuard('jwt'))
+  async findAll(@Req() req): Promise<UserVm[]> {
+    console.log(req.user);
     const users = await this.userService.findAll();
     return users.map(user => new UserVm(user));
   }

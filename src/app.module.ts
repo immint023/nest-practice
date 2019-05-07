@@ -6,15 +6,17 @@ import { SharedModule } from './shared/shared.module';
 import { ConfigurationService } from './shared/configuration/configuration.service';
 import { Configuration } from './shared/configuration/configuration.enum';
 import { UserModule } from './user/user.module';
+import { AuthModule } from './shared/auth/auth.module';
 
 @Module({
   imports: [
-    SharedModule,
-    UserModule,
     MongooseModule.forRoot(ConfigurationService.connectionString, {
       useNewUrlParser: true,
       useFindAndModify: false,
     }),
+    SharedModule,
+    UserModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
