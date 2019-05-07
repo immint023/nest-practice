@@ -7,6 +7,7 @@ import {
   HttpStatus,
   UseGuards,
   Req,
+  UseFilters,
 } from '@nestjs/common';
 import * as shortid from 'shortid';
 import { UserService } from './user.service';
@@ -14,8 +15,8 @@ import { UserVm } from './models/user.model';
 import { LoginResultVm } from './models/login-result.model';
 import { RegisterVm } from './models/register.model';
 import { LoginVm } from './models/login.model';
-import { ResetPasswordVm } from './models/reset-password.model';
 import { AuthGuard } from '@nestjs/passport';
+import { ChangePassword } from './models/change-password.model';
 import { AuthService } from 'src/shared/auth/auth.service';
 
 @Controller('user')
@@ -25,18 +26,22 @@ export class UserController {
     private readonly authService: AuthService,
   ) {}
 
+  @Get('token')
+  async getToken() {
+    return this.authService.signIn({ email: 'aaaa' });
+  }
+
   @Get()
   @UseGuards(AuthGuard('jwt'))
   async findAll(@Req() req): Promise<UserVm[]> {
-    console.log(req.user);
     const users = await this.userService.findAll();
     return users.map(user => new UserVm(user));
   }
 
-  @Post('login')
-  async login(@Body() params: LoginVm): Promise<LoginResultVm> {
-    return await this.userService.login(params);
-  }
+  // @Post('login')
+  // async login(@Body() params: LoginVm): Promise<LoginResultVm> {
+  //   return await this.userService.login(params);
+  // }
 
   @Post('register')
   async register(@Body() params: RegisterVm): Promise<LoginResultVm> {
@@ -72,31 +77,13 @@ export class UserController {
     };
   }
 
-  @Post('reset-password')
-  async resetPassword(@Body() params: ResetPasswordVm): Promise<LoginResultVm> {
-    const { email, code, password, confirmPassword } = params;
-    const user = await this.userService.findOne({
-      email,
-      codeResetPassword: code,
-    });
-    if (!user) {
-      throw new BadRequestException({
-        status: HttpStatus.BAD_REQUEST,
-        message: 'Không tìm thấy tài khoản.',
-      });
-    }
-
-    const isExpiredCode = <any>new Date() - <any>new Date(user.expiredAt) > 0;
-    if (isExpiredCode) {
-      throw new BadRequestException({
-        status: HttpStatus.BAD_REQUEST,
-        message: 'Code is expired.',
-      });
-    }
-    return this.userService.changePassword({
-      email: email,
-      password,
-      confirmPassword,
-    });
+  @Post('change-password')
+  @UseGuards(AuthGuard('jwt'))
+  async changePassword(@Body() params: ChangePassword, @Req() req) {
+    console.log(req.user);
+    // await this.userService.changePassword({ ...params, user: req.user });
+    return {
+      message: 'Done',
+    };
   }
 }

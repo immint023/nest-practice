@@ -1,7 +1,10 @@
-import { LoginVm } from './login.model';
 import { IsNotEmpty } from 'class-validator';
+import { User } from './user.model';
 
-export class ChangePassowrdVm extends LoginVm {
+export class ChangePassword {
+  user: User;
+  @IsNotEmpty()
+  newPassword: string;
   @IsNotEmpty()
   confirmPassword: string;
 }

@@ -11,13 +11,11 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async signIn(): Promise<string> {
-    const user: JwtPayload = { email: 'nvminh023@gmail.com' };
-    return this.jwtService.sign(user);
+  async signIn(payload: JwtPayload): Promise<string> {
+    return await this.jwtService.sign(payload);
   }
 
   async validateUser(payload: JwtPayload): Promise<any> {
-    console.log(payload);
     const user = await this.userService.findOne({ email: payload.email });
     return new UserVm(user);
   }

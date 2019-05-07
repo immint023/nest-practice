@@ -4,6 +4,8 @@ import { UserService } from './user.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { userSchema } from './models/user.model';
 import { PassportModule } from '@nestjs/passport';
+import { AuthService } from 'src/shared/auth/auth.service';
+import { AuthModule } from 'src/shared/auth/auth.module';
 
 @Module({
   imports: [

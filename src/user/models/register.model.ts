@@ -1,10 +1,14 @@
-import { IsNotEmpty, IsNumber } from 'class-validator';
+import { IsNotEmpty, IsEmail } from 'class-validator';
 import { LoginVm } from './login.model';
 
 export class RegisterVm extends LoginVm {
   @IsNotEmpty()
-  username: string;
+  @IsEmail()
+  email: string;
   @IsNotEmpty()
-  @IsNumber()
-  age: number;
+  password: string;
+  @IsNotEmpty()
+  firstName: string;
+  @IsNotEmpty()
+  lastName: string;
 }

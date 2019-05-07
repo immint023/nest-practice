@@ -16,7 +16,6 @@ import { AuthModule } from './shared/auth/auth.module';
     }),
     SharedModule,
     UserModule,
-    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
