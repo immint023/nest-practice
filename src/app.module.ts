@@ -10,11 +10,11 @@ import { AuthModule } from './shared/auth/auth.module';
 
 @Module({
   imports: [
+    SharedModule,
     MongooseModule.forRoot(ConfigurationService.connectionString, {
       useNewUrlParser: true,
       useFindAndModify: false,
     }),
-    SharedModule,
     UserModule,
   ],
   controllers: [AppController],

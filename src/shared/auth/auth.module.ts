@@ -11,7 +11,7 @@ import { Configuration } from '../configuration/configuration.enum';
   imports: [
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.register({
-      secretOrPrivateKey: process.env.JWT_KEY || get(Configuration.JWT_KEY),
+      secretOrPrivateKey: process.env.JWT_KEY,
       signOptions: {
         expiresIn: 3600,
       },

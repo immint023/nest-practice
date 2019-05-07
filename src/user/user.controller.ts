@@ -17,18 +17,14 @@ import { RegisterVm } from './models/register.model';
 import { LoginVm } from './models/login.model';
 import { AuthGuard } from '@nestjs/passport';
 import { ChangePassword } from './models/change-password.model';
-import { AuthService } from 'src/shared/auth/auth.service';
 
 @Controller('user')
 export class UserController {
-  constructor(
-    private readonly userService: UserService,
-    private readonly authService: AuthService,
-  ) {}
+  constructor(private readonly userService: UserService) {}
 
   @Get('token')
   async getToken() {
-    return this.authService.signIn({ email: 'aaaa' });
+    // return this.authService.signIn({ email: 'aaaa' });
   }
 
   @Get()

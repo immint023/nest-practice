@@ -7,6 +7,6 @@ import { AuthModule } from './auth/auth.module';
 @Module({
   imports: [EmailModule, AuthModule],
   providers: [ConfigurationService],
-  exports: [ConfigurationService, AuthModule],
+  exports: [AuthModule, EmailModule, ConfigurationService],
 })
 export class SharedModule {}

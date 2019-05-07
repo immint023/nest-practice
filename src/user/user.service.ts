@@ -6,6 +6,8 @@ import {
   ConflictException,
   NotFoundException,
   BadRequestException,
+  Inject,
+  forwardRef,
 } from '@nestjs/common';
 import { BaseService } from 'src/shared/base.service';
 import { User, UserVm } from './models/user.model';
@@ -15,21 +17,22 @@ import { RegisterVm } from './models/register.model';
 import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
 import { LoginResultVm } from './models/login-result.model';
-import { Configuration } from 'src/shared/configuration/configuration.enum';
+import { Configuration } from '../shared/configuration/configuration.enum';
 import { get } from 'config';
 import { LoginVm } from './models/login.model';
-import { EmailService } from 'src/shared/email/emai.service';
-import EmailTemplate from 'src/shared/email/email-template.interface';
+import { EmailService } from '../shared/email/emai.service';
+import EmailTemplate from '../shared/email/email-template.interface';
 import { ChangePassword } from './models/change-password.model';
-import { AuthService } from 'src/shared/auth/auth.service';
+import { AuthService } from '../shared/auth/auth.service';
 
 @Injectable()
 export class UserService extends BaseService<User> {
   constructor(
     @InjectModel('User') private readonly userModel: Model<User>,
+    @Inject(forwardRef(() => AuthService))
+    private readonly authService: AuthService,
     private readonly emailService: EmailService,
-  ) //private readonly authService: AuthService,
-  {
+  ) {
     super();
     this._model = userModel;
   }
